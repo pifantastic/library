@@ -1,0 +1,43 @@
+
+.Search-input {
+  display: block;
+  margin: 0 0 5px 0;
+  padding: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.Search-result {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 10px;
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: 33% 67%;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "image info"
+    "actions actions";
+  background-color: #ddd;
+}
+
+.Search-resultImage {
+  grid-area: image;
+}
+
+.Search-resultImage img {
+  width: 100%;
+}
+
+.Search-resultInfo {
+  grid-area: info;
+}
+
+.Search-resultActions {
+  grid-area: actions;
+}
+
+.Search-resultActions button {
+  padding: 7px;
+  cursor: pointer;
+}
