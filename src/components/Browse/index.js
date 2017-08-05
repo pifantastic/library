@@ -77,7 +77,7 @@ class Book extends Component {
   }
 
   render() {
-    const {book, rating} = this.props;
+    const {book, rating, updated, added} = this.props;
     const {title, authors, imageLinks, description, categories} = book.volumeInfo;
 
     return (

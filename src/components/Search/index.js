@@ -5,27 +5,67 @@ import googleBooks from '../../lib/google-books';
 
 import './style.css';
 
-const SearchResult = (props) => {
-  const {title, authors, publishedDate, imageLinks} = props.result.volumeInfo;
+class SearchResult extends Component {
 
-  return (
-    <div className="media">
-      <div className="media-left">
-        {imageLinks && <img className="media-object" alt={title} src={imageLinks.smallThumbnail} />}
+  renderLabels() {
+    const {
+      saleInfo: {
+        isEbook,
+      },
+    } = this.props.result;
+
+    const labels = [];
+
+    if (isEbook) {
+      labels.push({type: 'warning', text: 'ebook'});
+    }
+
+    if (labels.length) {
+      return [
+        <dt key="label">Labels</dt>,
+        <dd key="value">
+          {labels.map((label) => {
+            return (
+              <span key={label.text} className={`label label-${label.type}`}>
+                {label.text}
+              </span>
+            );
+          })}
+        </dd>,
+      ];
+    }
+  }
+
+  render() {
+    const {
+      volumeInfo: {
+        title,
+        authors,
+        publishedDate,
+        imageLinks,
+      }
+    } = this.props.result;
+
+    return (
+      <div className="media">
+        <div className="media-left">
+          {imageLinks && <img className="media-object" alt={title} src={imageLinks.smallThumbnail} />}
+        </div>
+        <div className="media-body">
+          <h4 className="media-heading">{title}</h4>
+          <em>{authors && authors.join(', ')}</em>
+          <dl>
+            <dt>Published</dt>
+            <dd>{publishedDate}</dd>
+            {this.renderLabels()}
+          </dl>
+          <button onClick={() => this.props.onAdd(this.props.result)}>
+            Add to library
+          </button>
+        </div>
       </div>
-      <div className="media-body">
-        <h4 className="media-heading">{title}</h4>
-        <em>{authors && authors.join(', ')}</em>
-        <dl>
-          <dt>Published</dt>
-          <dd>{publishedDate}</dd>
-        </dl>
-        <button onClick={() => props.onAdd(props.result)}>
-          Add to library
-        </button>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default class Search extends Component {

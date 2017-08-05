@@ -16,20 +16,33 @@ app.options('*', cors());
 app.use(bodyParser.json());
 
 app.get('/v1/books', (req, res) => {
-  const books = db.get('books');
-  res.json(books);
+  res.json(db.get('books'));
 });
 
 app.post('/v1/books', (req, res) => {
   const {book, rating} = req.body;
+  const now = Date.now();
+  const existingBook = db.get('books').find({id: book.id}).value();
 
-  db.get('books').remove({id: book.id}).write();
-
-  db.get('books').push({
-    id: book.id,
-    book: book,
-    rating: rating,
-  }).write();
+  if (existingBook) {
+    db.get('books')
+      .find({id: book.id})
+      .assign({
+        rating: rating,
+        updated: now,
+      })
+      .write()
+  } else {
+    db.get('books')
+      .push({
+        id: book.id,
+        book: book,
+        rating: rating,
+        updated: now,
+        added: now,
+      })
+      .write();
+  }
 
   res.json(db.get('books'));
 });
@@ -37,10 +50,6 @@ app.post('/v1/books', (req, res) => {
 app.delete('/v1/books/:id', (req, res) => {
   db.get('books').remove({id: req.params.id}).write();
   res.send('');
-});
-
-app.get('/v1/search', (req, res) => {
-
 });
 
 module.exports = app;
